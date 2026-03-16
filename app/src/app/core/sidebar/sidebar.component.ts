@@ -49,8 +49,26 @@ const FERRAMENTAS = [
         </button>
       </div>
 
-      <!-- Ferramentas -->
+      <!-- Navegação -->
       <nav class="flex-1 px-2 py-4 overflow-hidden">
+
+        <!-- Início -->
+        <a
+          routerLink="/home"
+          routerLinkActive="bg-slate-700/50 !text-slate-200"
+          [title]="recolhida() ? 'Início' : ''"
+          class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all mb-3"
+          [class.justify-center]="recolhida()"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 shrink-0">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+          @if (!recolhida()) {
+            <span class="leading-tight truncate">Início</span>
+          }
+        </a>
+
+        <!-- Ferramentas -->
         @if (!recolhida()) {
           <p class="text-xs text-slate-600 uppercase tracking-widest px-2 mb-2">Ferramentas</p>
         }

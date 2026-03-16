@@ -1,7 +1,13 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'otimizador-cristal-divino', pathMatch: 'full' },
+  // Para ativar a homepage: troque a linha abaixo por { path: '', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) }
+  { path: '', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./features/home/home.component').then((m) => m.HomeComponent),
+  },
   {
     path: 'otimizador-cristal-divino',
     loadComponent: () =>
