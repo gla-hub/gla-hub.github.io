@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 
 interface Atributo {
   nome: string;
@@ -78,16 +78,37 @@ export class OtimizadorComponent {
 
   equipamentoSelecionado = signal<Equipamento | null>(null);
   valoresAtuais = signal<Record<string, number | null>>({});
-  private readonly valoresPorEquipamento: Record<string, Record<string, number | null>> = {};
+  todosValores = signal<Record<string, Record<string, number | null>>>({});
+  totalSetAberto = signal(false);
+
+  totalSetLinhas = computed(() => {
+    const todos = this.todosValores();
+    return this.equipamentos.map((eq) => {
+      const vals = todos[eq.id] ?? {};
+      const cristais = eq.atributos.reduce((soma, attr) => {
+        const atual = vals[attr.nome] ?? attr.min;
+        if (atual >= attr.max) return soma;
+        return soma + Math.ceil((attr.max - atual) / attr.incremento);
+      }, 0);
+      return { nome: eq.nome, cristais };
+    });
+  });
+
+  totalSetGeral = computed(() =>
+    this.totalSetLinhas().reduce((s, e) => s + e.cristais, 0)
+  );
 
   selecionarEquipamento(eq: Equipamento): void {
     this.equipamentoSelecionado.set(eq);
-    if (!this.valoresPorEquipamento[eq.id]) {
+    const todos = this.todosValores();
+    if (!todos[eq.id]) {
       const vals: Record<string, number | null> = {};
       eq.atributos.forEach((a) => (vals[a.nome] = null));
-      this.valoresPorEquipamento[eq.id] = vals;
+      this.todosValores.update((t) => ({ ...t, [eq.id]: vals }));
+      this.valoresAtuais.set({ ...vals });
+    } else {
+      this.valoresAtuais.set({ ...todos[eq.id] });
     }
-    this.valoresAtuais.set({ ...this.valoresPorEquipamento[eq.id] });
   }
 
   atualizarValor(atributo: Atributo, valor: string): void {
@@ -114,7 +135,7 @@ export class OtimizadorComponent {
   private persistirValores(): void {
     const eq = this.equipamentoSelecionado();
     if (eq) {
-      this.valoresPorEquipamento[eq.id] = { ...this.valoresAtuais() };
+      this.todosValores.update((t) => ({ ...t, [eq.id]: { ...this.valoresAtuais() } }));
     }
   }
 
