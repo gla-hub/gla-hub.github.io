@@ -123,6 +123,10 @@ export class OtimizadorComponent {
     return Array.from({ length: total }, (_, i) => i < needed);
   }
 
+  attrSlug(nome: string): string {
+    return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+  }
+
   buttonClass(id: string): string {
     const base =
       'flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200 cursor-pointer';

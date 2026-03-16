@@ -33,21 +33,22 @@ const FERRAMENTAS: Ferramenta[] = [
   standalone: true,
   imports: [RouterLink],
   template: `
-    <div class="w-full">
+    <div id="home-page" class="w-full">
 
-      <main class="flex-1 w-full max-w-4xl mx-auto px-6 pt-16 pb-12">
+      <main id="home-main" class="flex-1 w-full max-w-4xl mx-auto px-6 pt-16 pb-12">
 
         <!-- Cabeçalho -->
-        <div class="mb-10">
-          <h1 class="text-2xl font-bold text-white tracking-tight">Ferramentas</h1>
+        <div id="home-header" class="mb-10">
+          <h1 id="home-title" class="text-2xl font-bold text-white tracking-tight">Ferramentas</h1>
           <p class="text-sm text-slate-500 mt-1">Selecione uma ferramenta para começar.</p>
         </div>
 
         <!-- Grid de cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div id="home-tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           @for (ferramenta of ferramentas; track ferramenta.rota) {
             @if (ferramenta.disponivel) {
               <a
+                [id]="'home-tool-card-' + ferramenta.rota.slice(1)"
                 [routerLink]="ferramenta.rota"
                 class="group flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl p-5
                        hover:border-slate-600 hover:bg-slate-800/50 transition-all duration-200 cursor-pointer"
@@ -63,6 +64,7 @@ const FERRAMENTAS: Ferramenta[] = [
               </a>
             } @else {
               <div
+                [id]="'home-tool-card-' + ferramenta.rota.slice(1) + '-disabled'"
                 class="flex flex-col gap-4 bg-slate-900/50 border border-slate-800/50 rounded-xl p-5
                        opacity-50 cursor-not-allowed"
               >

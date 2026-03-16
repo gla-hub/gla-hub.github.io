@@ -15,20 +15,22 @@ const FERRAMENTAS = [
   imports: [RouterLink, RouterLinkActive],
   template: `
     <aside
+      id="sidebar"
       class="bg-slate-900 border-r border-slate-800 flex flex-col h-full shrink-0 transition-all duration-300"
       [class.w-60]="!recolhida()"
       [class.w-14]="recolhida()"
     >
 
       <!-- Brand + toggle -->
-      <div class="flex items-center border-b border-slate-800 shrink-0 h-14 px-3 gap-2">
+      <div id="sidebar-header" class="flex items-center border-b border-slate-800 shrink-0 h-14 px-3 gap-2">
         @if (!recolhida()) {
-          <a routerLink="/" class="flex items-center gap-2.5 flex-1 min-w-0 px-1">
+          <a id="sidebar-brand-link" routerLink="/" class="flex items-center gap-2.5 flex-1 min-w-0 px-1">
             <img src="/Divine_Crystal.gif" alt="GLA Hub" class="w-5 h-5 shrink-0" />
             <span class="text-sm font-bold text-white tracking-wide truncate">GLA Hub</span>
           </a>
         }
         <button
+          id="sidebar-toggle-btn"
           (click)="recolhida.set(!recolhida())"
           class="flex items-center justify-center w-8 h-8 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800 transition-all shrink-0"
           [title]="recolhida() ? 'Expandir menu' : 'Recolher menu'"
@@ -50,10 +52,11 @@ const FERRAMENTAS = [
       </div>
 
       <!-- Navegação -->
-      <nav class="flex-1 px-2 py-4 overflow-hidden">
+      <nav id="sidebar-nav" class="flex-1 px-2 py-4 overflow-hidden">
 
         <!-- Início -->
         <a
+          id="sidebar-nav-home"
           routerLink="/home"
           routerLinkActive="bg-slate-700/50 !text-slate-200"
           [title]="recolhida() ? 'Início' : ''"
@@ -70,10 +73,11 @@ const FERRAMENTAS = [
 
         <!-- Ferramentas -->
         @if (!recolhida()) {
-          <p class="text-xs text-slate-600 uppercase tracking-widest px-2 mb-2">Ferramentas</p>
+          <p id="sidebar-nav-tools-label" class="text-xs text-slate-600 uppercase tracking-widest px-2 mb-2">Ferramentas</p>
         }
         @for (f of ferramentas; track f.rota) {
           <a
+            [id]="'sidebar-nav-tool-' + f.rota.slice(1)"
             [routerLink]="f.rota"
             routerLinkActive="bg-yellow-500/10 !text-yellow-300 border-l-2 border-yellow-400"
             [title]="recolhida() ? f.label : ''"
