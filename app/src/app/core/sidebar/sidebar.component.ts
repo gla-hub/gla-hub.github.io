@@ -1,0 +1,80 @@
+import { Component, signal } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+
+const FERRAMENTAS = [
+  {
+    label: 'Otimizador de Cristal Divino',
+    rota: '/otimizador-cristal-divino',
+    icone: '/Divine_Crystal.gif',
+  },
+];
+
+@Component({
+  selector: 'app-sidebar',
+  standalone: true,
+  imports: [RouterLink, RouterLinkActive],
+  template: `
+    <aside
+      class="bg-slate-900 border-r border-slate-800 flex flex-col h-full shrink-0 transition-all duration-300"
+      [class.w-60]="!recolhida()"
+      [class.w-14]="recolhida()"
+    >
+
+      <!-- Brand + toggle -->
+      <div class="flex items-center border-b border-slate-800 shrink-0 h-14 px-3 gap-2">
+        @if (!recolhida()) {
+          <a routerLink="/" class="flex items-center gap-2.5 flex-1 min-w-0 px-1">
+            <img src="/Divine_Crystal.gif" alt="GLA Hub" class="w-5 h-5 shrink-0" />
+            <span class="text-sm font-bold text-white tracking-wide truncate">GLA Hub</span>
+          </a>
+        }
+        <button
+          (click)="recolhida.set(!recolhida())"
+          class="flex items-center justify-center w-8 h-8 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800 transition-all shrink-0"
+          [title]="recolhida() ? 'Expandir menu' : 'Recolher menu'"
+        >
+          @if (recolhida()) {
+            <!-- Hamburger -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          } @else {
+            <!-- Chevron left -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          }
+        </button>
+      </div>
+
+      <!-- Ferramentas -->
+      <nav class="flex-1 px-2 py-4 overflow-hidden">
+        @if (!recolhida()) {
+          <p class="text-xs text-slate-600 uppercase tracking-widest px-2 mb-2">Ferramentas</p>
+        }
+        @for (f of ferramentas; track f.rota) {
+          <a
+            [routerLink]="f.rota"
+            routerLinkActive="bg-yellow-500/10 !text-yellow-300 border-l-2 border-yellow-400"
+            [title]="recolhida() ? f.label : ''"
+            class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all mb-1"
+            [class.justify-center]="recolhida()"
+            [class.pl-[10px]]="!recolhida()"
+          >
+            <img [src]="f.icone" [alt]="f.label" class="w-4 h-4 shrink-0" />
+            @if (!recolhida()) {
+              <span class="leading-tight truncate">{{ f.label }}</span>
+            }
+          </a>
+        }
+      </nav>
+
+    </aside>
+  `,
+})
+export class SidebarComponent {
+  readonly ferramentas = FERRAMENTAS;
+  recolhida = signal(false);
+}
