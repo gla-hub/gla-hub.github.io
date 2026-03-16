@@ -33,7 +33,7 @@ const FERRAMENTAS: Ferramenta[] = [
   standalone: true,
   imports: [RouterLink],
   template: `
-    <div class="min-h-screen flex flex-col">
+    <div class="w-full">
 
       <main class="flex-1 w-full max-w-4xl mx-auto px-6 pt-16 pb-12">
 
@@ -79,12 +79,6 @@ const FERRAMENTAS: Ferramenta[] = [
 
       </main>
 
-      <!-- Footer -->
-      <footer class="border-t border-slate-800/60 py-4 px-6">
-        <div class="max-w-4xl mx-auto flex items-center justify-between">
-          <span class="text-xs text-slate-700">GLA Hub • Feito por Augusto</span>
-        </div>
-      </footer>
 
     </div>
   `,
