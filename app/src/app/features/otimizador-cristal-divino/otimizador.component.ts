@@ -85,11 +85,13 @@ export class OtimizadorComponent {
     const todos = this.todosValores();
     return this.equipamentos.map((eq) => {
       const vals = todos[eq.id] ?? {};
-      const cristais = eq.atributos.reduce((soma, attr) => {
+      const porAtributo = eq.atributos.map((attr) => {
         const atual = vals[attr.nome] ?? attr.min;
-        if (atual >= attr.max) return soma;
-        return soma + Math.ceil((attr.max - atual) / attr.incremento);
-      }, 0);
+        if (atual >= attr.max) return 0;
+        return Math.ceil((attr.max - atual) / attr.incremento);
+      });
+      // Um cristal incrementa todos os atributos juntos: usa o máximo entre eles
+      const cristais = Math.max(...porAtributo);
       return { nome: eq.nome, cristais };
     });
   });
