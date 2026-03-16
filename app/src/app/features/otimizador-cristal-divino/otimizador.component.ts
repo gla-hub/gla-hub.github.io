@@ -78,33 +78,44 @@ export class OtimizadorComponent {
 
   equipamentoSelecionado = signal<Equipamento | null>(null);
   valoresAtuais = signal<Record<string, number | null>>({});
+  private readonly valoresPorEquipamento: Record<string, Record<string, number | null>> = {};
 
   selecionarEquipamento(eq: Equipamento): void {
     this.equipamentoSelecionado.set(eq);
-    const vals: Record<string, number | null> = {};
-    eq.atributos.forEach((a) => (vals[a.nome] = null));
-    this.valoresAtuais.set(vals);
+    if (!this.valoresPorEquipamento[eq.id]) {
+      const vals: Record<string, number | null> = {};
+      eq.atributos.forEach((a) => (vals[a.nome] = null));
+      this.valoresPorEquipamento[eq.id] = vals;
+    }
+    this.valoresAtuais.set({ ...this.valoresPorEquipamento[eq.id] });
   }
 
   atualizarValor(atributo: Atributo, valor: string): void {
-    if (valor === '') {
-      this.valoresAtuais.update((v) => ({ ...v, [atributo.nome]: null }));
-      return;
-    }
-    const num = Number(valor);
-    this.valoresAtuais.update((v) => ({ ...v, [atributo.nome]: isNaN(num) ? null : num }));
+    const num = valor === '' ? null : Number(valor);
+    const v = isNaN(num as number) ? null : num;
+    this.valoresAtuais.update((vals) => ({ ...vals, [atributo.nome]: v }));
+    this.persistirValores();
   }
 
   adicionarCristal(atributo: Atributo): void {
     const atual = this.valoresAtuais()[atributo.nome] ?? atributo.min;
     const novo = Math.min(atributo.max, atual + atributo.incremento);
     this.valoresAtuais.update((v) => ({ ...v, [atributo.nome]: novo }));
+    this.persistirValores();
   }
 
   subtrairCristal(atributo: Atributo): void {
     const atual = this.valoresAtuais()[atributo.nome] ?? atributo.min;
     const novo = Math.max(atributo.min, atual - atributo.incremento);
     this.valoresAtuais.update((v) => ({ ...v, [atributo.nome]: novo }));
+    this.persistirValores();
+  }
+
+  private persistirValores(): void {
+    const eq = this.equipamentoSelecionado();
+    if (eq) {
+      this.valoresPorEquipamento[eq.id] = { ...this.valoresAtuais() };
+    }
   }
 
   cristaisNecessarios(atributo: Atributo): number {
