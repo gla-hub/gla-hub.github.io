@@ -25,7 +25,7 @@ const FERRAMENTAS = [
       <div id="sidebar-header" class="flex items-center border-b border-slate-800 shrink-0 h-14 px-3 gap-2">
         @if (!recolhida()) {
           <a id="sidebar-brand-link" routerLink="/" class="flex items-center gap-2.5 flex-1 min-w-0 px-1">
-            <img src="/Divine_Crystal.gif" alt="GLA Hub" class="w-5 h-5 shrink-0" />
+            <img src="/favicon.png" alt="GLA Hub" class="w-5 h-5 shrink-0" />
             <span class="text-sm font-bold text-white tracking-wide truncate">GLA Hub</span>
           </a>
         }
