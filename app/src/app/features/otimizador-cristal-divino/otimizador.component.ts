@@ -79,6 +79,11 @@ export class OtimizadorComponent {
   equipamentoSelecionado = signal<Equipamento | null>(null);
   valoresAtuais = signal<Record<string, number | null>>({});
   discordCopiado = signal(false);
+  pixModalAberto = signal(false);
+  pixCopiado = signal(false);
+
+  private readonly PIX_CHAVE = 'af4535fc-c12e-47dd-80a3-7f13bc6a0d6c';
+  private readonly PIX_PAYLOAD = '00020126580014BR.GOV.BCB.PIX0136af4535fc-c12e-47dd-80a3-7f13bc6a0d6c5204000053039865802BR5925Augusto Allan Marques Per6009SAO PAULO62140510ADqnqFnLmF6304AE14';
 
   selecionarEquipamento(eq: Equipamento): void {
     this.equipamentoSelecionado.set(eq);
@@ -129,6 +134,17 @@ export class OtimizadorComponent {
       this.discordCopiado.set(true);
       setTimeout(() => this.discordCopiado.set(false), 2000);
     });
+  }
+
+  copiarPix(): void {
+    navigator.clipboard.writeText(this.PIX_CHAVE).then(() => {
+      this.pixCopiado.set(true);
+      setTimeout(() => this.pixCopiado.set(false), 2000);
+    });
+  }
+
+  get pixQrUrl(): string {
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(this.PIX_PAYLOAD)}&bgcolor=0f172a&color=ffffff&margin=16`;
   }
 
   buttonClass(id: string): string {
