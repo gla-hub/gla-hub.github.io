@@ -1,0 +1,79 @@
+<main id="tabela-raridade-page" class="w-full max-w-5xl mx-auto px-6 pt-16 pb-12">
+
+  <!-- Título -->
+  <div id="tabela-raridade-header" class="mb-8">
+    <h1 id="tabela-raridade-title" class="text-xl font-bold text-white">Guia de Equipamentos</h1>
+    <p id="tabela-raridade-subtitle" class="text-sm text-slate-500 mt-1">
+      Consulte os atributos mínimos de cada equipamento para atingir as raridades Raro, Épico e Lendário.
+    </p>
+  </div>
+
+  <!-- Legenda -->
+  <div id="tabela-raridade-legend" class="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl">
+    <span class="text-xs text-slate-600 uppercase tracking-widest font-medium shrink-0">Raridade</span>
+    <div class="flex flex-wrap gap-x-5 gap-y-2">
+      <div class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-slate-400 shrink-0"></span>
+        <span class="text-xs text-slate-300">Normal</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-blue-400 shrink-0"></span>
+        <span class="text-xs text-blue-400">Raro</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-purple-400 shrink-0"></span>
+        <span class="text-xs text-purple-400">Épico</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-yellow-400 shrink-0"></span>
+        <span class="text-xs text-yellow-400">Lendário</span>
+      </div>
+    </div>
+    <p class="text-xs text-slate-600 italic sm:ml-auto hidden sm:block">Valores indicam o mínimo do atributo para atingir aquela raridade</p>
+  </div>
+
+  <!-- Grid de equipamentos -->
+  <p class="text-xs text-slate-600 mb-3">
+    ⓘ Em equipamentos com dois atributos, a raridade final é definida pelo atributo de menor classificação.
+  </p>
+  <div id="tabela-raridade-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+    @for (eq of equipamentos; track eq.id) {
+      <div [id]="'tabela-card-' + eq.id" class="bg-slate-900 rounded-2xl border border-slate-800 p-4 flex flex-col xl:last:col-start-2">
+
+        <!-- Cabeçalho do card -->
+        <div class="flex items-center gap-3 mb-4">
+          <img [src]="eq.imagem" [alt]="eq.nome" class="w-10 h-10 object-contain shrink-0" />
+          <h2 class="text-sm font-bold text-white">{{ eq.nome }}</h2>
+        </div>
+
+        <!-- Tabela de raridade -->
+        <div class="overflow-x-auto flex-1">
+          <table class="w-full text-xs">
+            <thead>
+              <tr>
+                <th class="text-left text-slate-600 font-medium pb-2 pr-4">Atributo</th>
+                <th class="text-center text-slate-300 font-medium pb-2 px-2">Normal</th>
+                <th class="text-center text-blue-400 font-medium pb-2 px-2">Raro</th>
+                <th class="text-center text-purple-400 font-medium pb-2 px-2">Épico</th>
+                <th class="text-center text-yellow-400 font-medium pb-2 px-2">Lendário</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (attr of eq.atributos; track attr.nome) {
+                <tr class="border-t border-slate-800/70">
+                  <td class="text-slate-400 py-2 pr-4 font-medium">{{ attr.nome }}</td>
+                  <td class="text-center text-slate-300 py-2 px-2 tabular-nums">{{ attr.limites.normal }}</td>
+                  <td class="text-center text-blue-400 py-2 px-2 tabular-nums">{{ attr.limites.raro }}</td>
+                  <td class="text-center text-purple-400 py-2 px-2 tabular-nums">{{ attr.limites.epico }}</td>
+                  <td class="text-center text-yellow-400 py-2 px-2 tabular-nums">{{ attr.limites.lendario }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    }
+  </div>
+
+</main>

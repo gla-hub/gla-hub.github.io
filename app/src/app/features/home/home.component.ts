@@ -11,6 +11,14 @@ interface Ferramenta {
 
 const FERRAMENTAS: Ferramenta[] = [
   {
+    label: 'Guia de Equipamentos',
+    descricao:
+      'Consulte os atributos mínimos de cada equipamento para atingir as raridades Raro, Épico e Lendário.',
+    rota: '/guia-equipamentos',
+    icone: '/equipamentos/armadura.png',
+    disponivel: true,
+  },
+  {
     label: 'Otimizador de Cristal Divino',
     descricao:
       'Calcule quantos Cristais Divinos são necessários para maximizar cada atributo do seu equipamento.',
@@ -18,14 +26,6 @@ const FERRAMENTAS: Ferramenta[] = [
     icone: '/Divine_Crystal.gif',
     disponivel: true,
   },
-  // Adicione novas ferramentas aqui. Exemplo:
-  // {
-  //   label: 'Calculadora de Refino',
-  //   descricao: 'Estime o custo de refino de equipamentos.',
-  //   rota: '/calculadora-refino',
-  //   icone: '/equipamentos/sabre.png',
-  //   disponivel: false,
-  // },
 ];
 
 @Component({

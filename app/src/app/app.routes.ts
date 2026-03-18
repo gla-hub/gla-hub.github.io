@@ -15,4 +15,11 @@ export const routes: Routes = [
         (m) => m.OtimizadorComponent
       ),
   },
+  {
+    path: 'guia-equipamentos',
+    loadComponent: () =>
+      import('./features/guia-equipamentos/guia-equipamentos.component').then(
+        (m) => m.TabelaRaridadeComponent
+      ),
+  },
 ];

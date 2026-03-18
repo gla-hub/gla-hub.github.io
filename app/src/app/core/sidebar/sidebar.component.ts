@@ -3,6 +3,11 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 const FERRAMENTAS = [
   {
+    label: 'Guia de Equipamentos',
+    rota: '/guia-equipamentos',
+    icone: '/equipamentos/armadura.png',
+  },
+  {
     label: 'Otimizador de Cristal Divino',
     rota: '/otimizador-cristal-divino',
     icone: '/Divine_Crystal.gif',
