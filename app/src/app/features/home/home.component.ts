@@ -11,6 +11,14 @@ interface Ferramenta {
 
 const FERRAMENTAS: Ferramenta[] = [
   {
+    label: 'Guia de Equipamentos',
+    descricao:
+      'Consulte os atributos mínimos de cada equipamento para atingir as raridades Raro, Épico e Lendário.',
+    rota: '/guia-equipamentos',
+    icone: '/equipamentos/armadura.png',
+    disponivel: true,
+  },
+  {
     label: 'Otimizador de Cristal Divino',
     descricao:
       'Calcule quantos Cristais Divinos são necessários para maximizar cada atributo do seu equipamento.',
@@ -18,14 +26,6 @@ const FERRAMENTAS: Ferramenta[] = [
     icone: '/Divine_Crystal.gif',
     disponivel: true,
   },
-  // Adicione novas ferramentas aqui. Exemplo:
-  // {
-  //   label: 'Calculadora de Refino',
-  //   descricao: 'Estime o custo de refino de equipamentos.',
-  //   rota: '/calculadora-refino',
-  //   icone: '/equipamentos/sabre.png',
-  //   disponivel: false,
-  // },
 ];
 
 @Component({
@@ -44,23 +44,21 @@ const FERRAMENTAS: Ferramenta[] = [
         </div>
 
         <!-- Grid de cards -->
-        <div id="home-tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div id="home-tools-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           @for (ferramenta of ferramentas; track ferramenta.rota) {
             @if (ferramenta.disponivel) {
               <a
                 [id]="'home-tool-card-' + ferramenta.rota.slice(1)"
                 [routerLink]="ferramenta.rota"
-                class="group flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl p-5
+                class="group relative flex flex-col gap-4 bg-slate-900 border border-slate-800 rounded-xl p-5
                        hover:border-slate-600 hover:bg-slate-800/50 transition-all duration-200 cursor-pointer"
               >
+                <span class="absolute top-4 right-4 text-slate-700 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-200">→</span>
                 <div class="flex items-center gap-3">
                   <img [src]="ferramenta.icone" [alt]="ferramenta.label" class="w-8 h-8 object-contain" />
-                  <span class="text-sm font-semibold text-white leading-tight">{{ ferramenta.label }}</span>
+                  <span class="text-sm font-semibold text-white leading-tight pr-4">{{ ferramenta.label }}</span>
                 </div>
-                <p class="text-xs text-slate-400 leading-relaxed flex-1">{{ ferramenta.descricao }}</p>
-                <span class="text-xs font-medium text-emerald-500 group-hover:text-emerald-400 transition-colors">
-                  Abrir ferramenta →
-                </span>
+                <p class="text-xs text-slate-400 leading-relaxed">{{ ferramenta.descricao }}</p>
               </a>
             } @else {
               <div
