@@ -70,75 +70,83 @@
         <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Por Equipamento</span>
       </div>
       @for (res of resumoPorEquipamento(); track res.id) {
-        @if (res.selecionado) {
-          <div
-            [id]="'boost-result-' + res.id"
-            class="flex items-center justify-between px-6 py-4 border-b border-slate-800/60"
-          >
-            <div class="flex items-center gap-3">
-              <img [src]="res.icone" [alt]="res.nome" class="w-8 h-8 object-contain shrink-0" />
-              <div>
-                <p class="text-sm font-semibold text-slate-200">{{ res.nome }}</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-6 text-right">
-              <div>
-                <p class="text-xs text-slate-500 mb-0.5">Cristais esperados</p>
-                <p class="text-sm font-bold text-slate-200">~{{ res.totalCristais }}</p>
-              </div>
-              <div class="w-28">
-                <p class="text-xs text-slate-500 mb-0.5">Custo estimado</p>
-                @if (algumPrecoPreenchido()) {
-                  <div class="flex items-center justify-end gap-1">
-                    <img src="/berry.gif" alt="Berry" class="w-3.5 h-3.5 object-contain" />
-                    <span class="text-sm font-bold text-slate-200">{{ formatarCusto(res.totalCusto) }}</span>
-                  </div>
-                } @else {
-                  <p class="text-sm text-slate-600">—</p>
-                }
-              </div>
+        <div
+          [id]="'boost-result-' + res.id"
+          class="flex items-center justify-between px-6 py-4 border-b border-slate-800/60 transition-opacity duration-200"
+          [class.opacity-30]="!res.selecionado"
+        >
+          <div class="flex items-center gap-3">
+            <img [src]="res.icone" [alt]="res.nome" class="w-8 h-8 object-contain shrink-0" />
+            <div>
+              <p class="text-sm font-semibold text-slate-200">{{ res.nome }}</p>
             </div>
           </div>
-        }
+          <div class="flex items-center gap-6 text-right">
+            <div>
+              <p class="text-xs text-slate-500 mb-0.5">Cristais esperados</p>
+              @if (res.selecionado && res.totalCristaisFiltrado > 0) {
+                <p class="text-sm font-bold text-slate-200">~{{ res.totalCristaisFiltrado }}</p>
+              } @else {
+                <p class="text-sm text-slate-600">—</p>
+              }
+            </div>
+            <div class="w-28">
+              <p class="text-xs text-slate-500 mb-0.5">Custo estimado</p>
+              @if (res.selecionado && algumPrecoPreenchido()) {
+                <div class="flex items-center justify-end gap-1">
+                  <img src="/berry.gif" alt="Berry" class="w-3.5 h-3.5 object-contain" />
+                  <span class="text-sm font-bold text-slate-200">{{ formatarCusto(res.totalCusto) }}</span>
+                </div>
+              } @else {
+                <p class="text-sm text-slate-600">—</p>
+              }
+            </div>
+          </div>
+        </div>
       }
 
       <!-- Seção: Por Fase -->
-      @if (algumPrecoPreenchido()) {
-        <div class="px-6 py-2 bg-slate-800/40 border-b border-slate-800 border-t border-t-slate-700/50">
-          <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Por Fase</span>
-        </div>
-      }
+      <div class="px-6 py-2 bg-slate-800/40 border-b border-slate-800 border-t border-t-slate-700/50">
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Por Fase</span>
+      </div>
       @for (fase of resumoPorFase(); track fase.id) {
-        @if ((precoAtual(fase.id) ?? 0) > 0) {
-          <div
-            [id]="'boost-result-fase-' + fase.id"
-            class="flex items-center justify-between px-6 py-4 border-b border-slate-800/60"
-          >
-            <div class="flex items-center gap-3">
-              <img [src]="fase.icone" [alt]="fase.label" class="w-8 h-8 object-contain shrink-0" />
-              <div>
-                <p [class]="'text-sm font-semibold ' + fase.textClass">{{ fase.label }}</p>
-                <p class="text-xs text-slate-500">{{ fase.niveis }}</p>
-              </div>
+        <div
+          [id]="'boost-result-fase-' + fase.id"
+          class="flex items-center justify-between px-6 py-4 border-b border-slate-800/60 transition-opacity duration-200"
+          [class.opacity-30]="(precoAtual(fase.id) ?? 0) === 0"
+        >
+          <div class="flex items-center gap-3">
+            <img [src]="fase.icone" [alt]="fase.label" class="w-8 h-8 object-contain shrink-0" />
+            <div>
+              <p [class]="'text-sm font-semibold ' + fase.textClass">{{ fase.label }}</p>
+              <p class="text-xs text-slate-500">{{ fase.niveis }}</p>
             </div>
-            <div class="flex items-center gap-6 text-right">
-              <div>
-                <p class="text-xs text-slate-500 mb-0.5">Cristais esperados</p>
+          </div>
+          <div class="flex items-center gap-6 text-right">
+            <div>
+              <p class="text-xs text-slate-500 mb-0.5">Cristais esperados</p>
+              @if ((precoAtual(fase.id) ?? 0) > 0) {
                 <div class="flex items-center justify-end gap-1">
                   <img [src]="fase.icone" [alt]="" class="w-3.5 h-3.5 object-contain" />
                   <span class="text-sm font-bold text-slate-200">~{{ fase.totalCristais }}</span>
                 </div>
-              </div>
-              <div class="w-28">
-                <p class="text-xs text-slate-500 mb-0.5">Custo estimado</p>
+              } @else {
+                <p class="text-sm text-slate-600">—</p>
+              }
+            </div>
+            <div class="w-28">
+              <p class="text-xs text-slate-500 mb-0.5">Custo estimado</p>
+              @if ((precoAtual(fase.id) ?? 0) > 0) {
                 <div class="flex items-center justify-end gap-1">
                   <img src="/berry.gif" alt="Berry" class="w-3.5 h-3.5 object-contain" />
                   <span [class]="'text-sm font-bold ' + fase.textClass">{{ formatarCusto(fase.totalCusto) }}</span>
                 </div>
-              </div>
+              } @else {
+                <p class="text-sm text-slate-600">—</p>
+              }
             </div>
           </div>
-        }
+        </div>
       }
 
       <!-- Total do Set -->

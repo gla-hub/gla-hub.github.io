@@ -150,15 +150,18 @@ export class CalculadoraBoostComponent {
     const selecionados = this.equipamentosSelecionados();
     return EQUIPAMENTOS_BOOST.map((eq) => {
       let totalCristaisRaw = 0;
+      let totalCristaisRawFiltrado = 0;
       let totalCusto = 0;
       for (const nivel of BOOST_LEVELS) {
         const tent = calcTentativasEsperadas(nivel.chance, nivel.pity);
         const cristais = tent * eq.cristais;
         totalCristaisRaw += cristais;
+        if (precos[nivel.cristal] > 0) totalCristaisRawFiltrado += cristais;
         totalCusto += cristais * precos[nivel.cristal];
       }
       const totalCristais = Math.round(totalCristaisRaw / eq.cristais) * eq.cristais;
-      return { ...eq, totalCristais, totalCusto, selecionado: selecionados.has(eq.id) };
+      const totalCristaisFiltrado = Math.round(totalCristaisRawFiltrado / eq.cristais) * eq.cristais;
+      return { ...eq, totalCristais, totalCristaisFiltrado, totalCusto, selecionado: selecionados.has(eq.id) };
     });
   });
 
