@@ -134,6 +134,11 @@ export class CalculadoraBoostComponent {
   precoCarmesim = signal<number | null>(null);
   precoRadiante = signal<number | null>(null);
 
+  guardadosCeu      = signal<number | null>(null);
+  guardadosSabio    = signal<number | null>(null);
+  guardadosCarmesim = signal<number | null>(null);
+  guardadosRadiante = signal<number | null>(null);
+
   detalhesAbertos = signal(false);
   equipamentoDetalhesAtivo = signal<string>('capacete');
   equipamentosSelecionados = signal<Set<string>>(new Set(EQUIPAMENTOS_BOOST.map(e => e.id)));
@@ -143,6 +148,13 @@ export class CalculadoraBoostComponent {
     sabio:    this.precoSabio()    ?? 0,
     carmesim: this.precoCarmesim() ?? 0,
     radiante: this.precoRadiante() ?? 0,
+  }));
+
+  private guardadosMap = computed(() => ({
+    ceu:      Math.max(0, this.guardadosCeu()      ?? 0),
+    sabio:    Math.max(0, this.guardadosSabio()    ?? 0),
+    carmesim: Math.max(0, this.guardadosCarmesim() ?? 0),
+    radiante: Math.max(0, this.guardadosRadiante() ?? 0),
   }));
 
   resumoPorEquipamento = computed(() => {
@@ -167,21 +179,22 @@ export class CalculadoraBoostComponent {
 
   resumoPorFase = computed(() => {
     const precos = this.precoMap();
+    const guardados = this.guardadosMap();
     const selecionados = this.equipamentosSelecionados();
     const equipSelecionados = EQUIPAMENTOS_BOOST.filter(e => selecionados.has(e.id));
     return FAIXAS.map((faixa) => {
       const niveisDoFaixa = BOOST_LEVELS.filter(n => n.cristal === faixa.id);
       let totalCristaisRaw = 0;
-      let totalCusto = 0;
       for (const eq of equipSelecionados) {
         for (const nivel of niveisDoFaixa) {
           const tent = calcTentativasEsperadas(nivel.chance, nivel.pity);
-          const cristais = tent * eq.cristais;
-          totalCristaisRaw += cristais;
-          totalCusto += cristais * precos[faixa.id];
+          totalCristaisRaw += tent * eq.cristais;
         }
       }
-      return { ...faixa, totalCristais: Math.round(totalCristaisRaw), totalCusto };
+      const totalCristais = Math.round(totalCristaisRaw);
+      const cristaisAComprar = Math.max(0, totalCristais - guardados[faixa.id]);
+      const totalCusto = cristaisAComprar * precos[faixa.id];
+      return { ...faixa, totalCristais, totalCusto };
     });
   });
 
@@ -193,7 +206,7 @@ export class CalculadoraBoostComponent {
       cristais: fases
         .filter(f => precos[f.id] > 0)
         .reduce((s, f) => s + f.totalCristais, 0),
-      custo:    r.reduce((s, e) => s + e.totalCusto, 0),
+      custo:    fases.reduce((s, f) => s + f.totalCusto, 0),
       count:    r.length,
     };
   });
@@ -236,6 +249,23 @@ export class CalculadoraBoostComponent {
     if (cristal === 'sabio')    this.precoSabio.set(v);
     if (cristal === 'carmesim') this.precoCarmesim.set(v);
     if (cristal === 'radiante') this.precoRadiante.set(v);
+  }
+
+  atualizarGuardados(cristal: TipoCristal, valor: string): void {
+    const num = valor === '' ? null : Number(valor);
+    const v = num === null || isNaN(num) ? null : Math.max(0, Math.floor(num));
+    if (cristal === 'ceu')      this.guardadosCeu.set(v);
+    if (cristal === 'sabio')    this.guardadosSabio.set(v);
+    if (cristal === 'carmesim') this.guardadosCarmesim.set(v);
+    if (cristal === 'radiante') this.guardadosRadiante.set(v);
+  }
+
+  guardadosAtual(cristal: TipoCristal): number | null {
+    if (cristal === 'ceu')      return this.guardadosCeu();
+    if (cristal === 'sabio')    return this.guardadosSabio();
+    if (cristal === 'carmesim') return this.guardadosCarmesim();
+    if (cristal === 'radiante') return this.guardadosRadiante();
+    return null;
   }
 
   precoAtual(cristal: TipoCristal): number | null {
