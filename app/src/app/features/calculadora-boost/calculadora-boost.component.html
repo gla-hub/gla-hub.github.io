@@ -70,7 +70,30 @@
 
       <!-- Equipamentos do Set -->
       <section id="boost-equipment-section">
-        <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Equipamentos</h2>
+        <div class="flex items-center justify-between mb-1">
+          <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Equipamentos</h2>
+          <label class="flex items-center gap-2.5 cursor-pointer select-none group">
+            <span class="text-xs transition-colors"
+              [class.text-yellow-400]="armaEspecial()"
+              [class.text-slate-400]="!armaEspecial()"
+            >Arma especial</span>
+            <div
+              class="relative w-9 h-5 rounded-full border transition-colors duration-200 shrink-0"
+              [class.bg-yellow-500]="armaEspecial()"
+              [class.border-yellow-400]="armaEspecial()"
+              [class.bg-slate-700]="!armaEspecial()"
+              [class.border-slate-500]="!armaEspecial()"
+            >
+              <input type="checkbox" class="sr-only" [checked]="armaEspecial()" (change)="armaEspecial.set(!armaEspecial())" />
+              <span
+                class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full shadow-md transition-transform duration-200"
+                [class.bg-white]="armaEspecial()"
+                [class.translate-x-4]="armaEspecial()"
+                [class.bg-slate-400]="!armaEspecial()"
+              ></span>
+            </div>
+          </label>
+        </div>
         <p class="text-xs text-slate-600 mb-4">Selecione os equipamentos que deseja incluir na estimativa</p>
         <div id="boost-equipment-grid" class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 gap-2">
           @for (eq of equipamentosBoost; track eq.id) {
@@ -148,9 +171,9 @@
             </div>
           }
 
-          <!-- Seção: Por Fase -->
+          <!-- Seção: Por Nível -->
           <div class="px-6 py-2 bg-slate-800/40 border-b border-slate-800 border-t border-t-slate-700/50">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Por Fase</span>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Por Nível</span>
           </div>
           @for (fase of resumoPorFase(); track fase.id) {
             <div
