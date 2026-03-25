@@ -143,6 +143,7 @@ export class CalculadoraBoostComponent {
   equipamentoDetalhesAtivo = signal<string>('capacete');
   equipamentosSelecionados = signal<Set<string>>(new Set());
   armaEspecial = signal(false);
+  modoMaximo = signal(false);
 
   private precoMap = computed(() => ({
     ceu:      this.precoCeu()      ?? 0,
@@ -162,6 +163,7 @@ export class CalculadoraBoostComponent {
     const precos = this.precoMap();
     const selecionados = this.equipamentosSelecionados();
     const armaEspecial = this.armaEspecial();
+    const maximo = this.modoMaximo();
     return EQUIPAMENTOS_BOOST.map((eq) => {
       let totalCristais = 0;
       let totalCristaisFiltrado = 0;
@@ -169,7 +171,7 @@ export class CalculadoraBoostComponent {
       for (const nivel of BOOST_LEVELS) {
         const chance = (eq.id === 'arma' && armaEspecial) ? 0.20 : nivel.chance;
         const pity   = (eq.id === 'arma' && armaEspecial) ? 6    : nivel.pity;
-        const tent = calcTentativasEsperadas(chance, pity);
+        const tent = maximo ? pity : calcTentativasEsperadas(chance, pity);
         const cristais = Math.round(tent) * eq.cristais;
         totalCristais += cristais;
         if (precos[nivel.cristal] > 0) totalCristaisFiltrado += cristais;
@@ -184,6 +186,7 @@ export class CalculadoraBoostComponent {
     const guardados = this.guardadosMap();
     const selecionados = this.equipamentosSelecionados();
     const armaEspecial = this.armaEspecial();
+    const maximo = this.modoMaximo();
     const equipSelecionados = EQUIPAMENTOS_BOOST.filter(e => selecionados.has(e.id));
     return FAIXAS.map((faixa) => {
       const niveisDoFaixa = BOOST_LEVELS.filter(n => n.cristal === faixa.id);
@@ -193,7 +196,7 @@ export class CalculadoraBoostComponent {
         for (const nivel of niveisDoFaixa) {
           const chance = (eq.id === 'arma' && armaEspecial) ? 0.20 : nivel.chance;
           const pity   = (eq.id === 'arma' && armaEspecial) ? 6    : nivel.pity;
-          const tent = calcTentativasEsperadas(chance, pity);
+          const tent = maximo ? pity : calcTentativasEsperadas(chance, pity);
           const cristais = Math.round(tent) * eq.cristais;
           totalCristais += cristais;
           totalCustoRaw += cristais * precos[faixa.id];
@@ -219,6 +222,7 @@ export class CalculadoraBoostComponent {
 
   detalhesPorNivel = computed(() => {
     const precos = this.precoMap();
+    const maximo = this.modoMaximo();
     const eq = EQUIPAMENTOS_BOOST.find((e) => e.id === this.equipamentoDetalhesAtivo()) ?? EQUIPAMENTOS_BOOST[0];
     const mult = eq.cristais;
     const isArmaEspecial = eq.id === 'arma' && this.armaEspecial();
@@ -226,11 +230,10 @@ export class CalculadoraBoostComponent {
       const faixa = FAIXAS.find((f) => f.id === n.cristal)!;
       const chance = isArmaEspecial ? 0.20 : n.chance;
       const pity   = isArmaEspecial ? 6    : n.pity;
-      const tentativasRaw = calcTentativasEsperadas(chance, pity);
-      const cristaisRaw = tentativasRaw * mult;
+      const tentativasRaw = maximo ? pity : calcTentativasEsperadas(chance, pity);
       const tentativas = Math.round(tentativasRaw);
-      const cristais = Math.round(cristaisRaw / mult) * mult;
-      const custo = cristaisRaw * precos[n.cristal];
+      const cristais = tentativas * mult;
+      const custo = cristais * precos[n.cristal];
       return { ...n, chance, pity, tentativas, cristais, custo, faixa };
     });
   });
