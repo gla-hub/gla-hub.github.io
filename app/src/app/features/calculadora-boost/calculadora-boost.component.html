@@ -122,7 +122,16 @@
         <div class="flex items-baseline justify-between mb-4 mt-8 lg:mt-0">
           <div class="flex items-baseline gap-3">
             <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Estimativa de Custo</h2>
-            <p class="text-xs text-slate-600">~ valores são médias esperadas</p>
+            <div class="flex items-center gap-0.5 bg-slate-800 rounded-lg p-0.5">
+              <button
+                (click)="modoMaximo.set(false)"
+                [class]="!modoMaximo() ? 'px-2.5 py-0.5 rounded-md bg-slate-600 text-slate-200 text-xs font-medium transition-all' : 'px-2.5 py-0.5 rounded-md text-slate-500 text-xs hover:text-slate-300 transition-all'"
+              >Média</button>
+              <button
+                (click)="modoMaximo.set(true)"
+                [class]="modoMaximo() ? 'px-2.5 py-0.5 rounded-md bg-slate-600 text-slate-200 text-xs font-medium transition-all' : 'px-2.5 py-0.5 rounded-md text-slate-500 text-xs hover:text-slate-300 transition-all'"
+              >Máximo</button>
+            </div>
           </div>
           <button
             (click)="detalhesAbertos.set(true)"
@@ -154,7 +163,7 @@
                 <div>
                   <p class="text-xs text-slate-500 mb-0.5">Cristais</p>
                   @if (res.selecionado && res.totalCristaisFiltrado > 0) {
-                    <p class="text-sm font-bold text-slate-200">~{{ res.totalCristaisFiltrado }}</p>
+                    <p class="text-sm font-bold text-slate-200">{{ modoMaximo() ? '' : '~' }}{{ res.totalCristaisFiltrado }}</p>
                   } @else {
                     <p class="text-sm text-slate-600">—</p>
                   }
@@ -195,7 +204,7 @@
                 <div>
                   <p class="text-xs text-slate-500 mb-0.5">Cristais</p>
                   @if ((precoAtual(fase.id) ?? 0) > 0) {
-                    <p class="text-sm font-bold text-slate-200">~{{ fase.totalCristais }}</p>
+                    <p class="text-sm font-bold text-slate-200">{{ modoMaximo() ? '' : '~' }}{{ fase.totalCristais }}</p>
                   } @else {
                     <p class="text-sm text-slate-600">—</p>
                   }
@@ -233,7 +242,7 @@
             <div class="flex items-center gap-3 sm:gap-6 text-right shrink-0">
               <div>
                 <p class="text-xs text-slate-500 mb-0.5">Cristais</p>
-                <p class="text-sm font-bold text-yellow-300">~{{ totalSet().cristais }}</p>
+                <p class="text-sm font-bold text-yellow-300">{{ modoMaximo() ? '' : '~' }}{{ totalSet().cristais }}</p>
               </div>
               <div class="min-w-[4.5rem]">
                 <p class="text-xs text-slate-500 mb-0.5">Custo</p>
@@ -313,8 +322,8 @@
                 <th class="px-4 py-2.5 text-left font-medium">Cristal</th>
                 <th class="px-4 py-2.5 text-right font-medium">Chance</th>
                 <th class="px-4 py-2.5 text-right font-medium">Pity</th>
-                <th class="px-4 py-2.5 text-right font-medium">Média de tentativas</th>
-                <th class="px-4 py-2.5 text-right font-medium">Cristais esperados</th>
+                <th class="px-4 py-2.5 text-right font-medium">{{ modoMaximo() ? 'Tentativas (máx.)' : 'Média de tentativas' }}</th>
+                <th class="px-4 py-2.5 text-right font-medium">{{ modoMaximo() ? 'Cristais (máx.)' : 'Cristais esperados' }}</th>
                 <th class="px-4 py-2.5 text-right font-medium">Custo estimado</th>
               </tr>
             </thead>
@@ -330,11 +339,11 @@
                   </td>
                   <td class="px-4 py-2.5 text-right text-slate-400">{{ (det.chance * 100).toFixed(0) }}%</td>
                   <td class="px-4 py-2.5 text-right text-slate-400">{{ det.pity }}ª</td>
-                  <td class="px-4 py-2.5 text-right text-slate-300">~{{ det.tentativas }}</td>
+                  <td class="px-4 py-2.5 text-right text-slate-300">{{ modoMaximo() ? '' : '~' }}{{ det.tentativas }}</td>
                   <td class="px-4 py-2.5 text-right">
                     <div class="flex items-center justify-end gap-1">
                       <img [src]="det.faixa.icone" [alt]="" class="w-3.5 h-3.5 object-contain" />
-                      <span class="font-semibold text-slate-200">~{{ det.cristais }}</span>
+                      <span class="font-semibold text-slate-200">{{ modoMaximo() ? '' : '~' }}{{ det.cristais }}</span>
                     </div>
                   </td>
                   <td class="px-4 py-2.5 text-right">
