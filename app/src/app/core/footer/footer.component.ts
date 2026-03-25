@@ -8,7 +8,7 @@ import { Component, signal } from '@angular/core';
       <div class="max-w-4xl mx-auto px-6 flex flex-wrap items-center justify-between gap-y-3">
 
         <!-- Esquerda: versão -->
-        <span id="footer-version" class="text-xs text-slate-600">GLA Hub — v1.2.2</span>
+        <span id="footer-version" class="text-xs text-slate-600">GLA Hub — v1.2.3</span>
 
         <!-- Direita: ícones sociais + crédito + apoiar -->
         <div id="footer-right" class="flex items-center gap-4">
