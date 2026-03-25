@@ -173,7 +173,7 @@ export class CalculadoraBoostComponent {
         const cristais = Math.round(tent) * eq.cristais;
         totalCristais += cristais;
         if (precos[nivel.cristal] > 0) totalCristaisFiltrado += cristais;
-        totalCusto += tent * eq.cristais * precos[nivel.cristal];
+        totalCusto += cristais * precos[nivel.cristal];
       }
       return { ...eq, totalCristais, totalCristaisFiltrado: totalCristaisFiltrado, totalCusto, selecionado: selecionados.has(eq.id) };
     });
@@ -188,16 +188,18 @@ export class CalculadoraBoostComponent {
     return FAIXAS.map((faixa) => {
       const niveisDoFaixa = BOOST_LEVELS.filter(n => n.cristal === faixa.id);
       let totalCristais = 0;
+      let totalCustoRaw = 0;
       for (const eq of equipSelecionados) {
         for (const nivel of niveisDoFaixa) {
           const chance = (eq.id === 'arma' && armaEspecial) ? 0.20 : nivel.chance;
           const pity   = (eq.id === 'arma' && armaEspecial) ? 6    : nivel.pity;
           const tent = calcTentativasEsperadas(chance, pity);
-          totalCristais += Math.round(tent) * eq.cristais;
+          const cristais = Math.round(tent) * eq.cristais;
+          totalCristais += cristais;
+          totalCustoRaw += cristais * precos[faixa.id];
         }
       }
-      const cristaisAComprar = Math.max(0, totalCristais - guardados[faixa.id]);
-      const totalCusto = cristaisAComprar * precos[faixa.id];
+      const totalCusto = Math.max(0, totalCustoRaw - guardados[faixa.id] * precos[faixa.id]);
       return { ...faixa, totalCristais, totalCusto };
     });
   });
@@ -283,6 +285,18 @@ export class CalculadoraBoostComponent {
     return null;
   }
 
+  toggleArmaEspecial(): void {
+    const next = !this.armaEspecial();
+    this.armaEspecial.set(next);
+    if (next) {
+      this.equipamentosSelecionados.update(s => {
+        const n = new Set(s);
+        n.add('arma');
+        return n;
+      });
+    }
+  }
+
   toggleEquipamento(id: string): void {
     this.equipamentosSelecionados.update(s => {
       const next = new Set(s);
@@ -310,9 +324,9 @@ export class CalculadoraBoostComponent {
 
   formatarCusto(n: number): string {
     if (n === 0) return '—';
-    if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(2) + 'B';
-    if (n >= 1_000_000)     return (n / 1_000_000).toFixed(2) + 'M';
-    if (n >= 1_000)         return (n / 1_000).toFixed(1) + 'K';
+    if (n >= 1_000_000_000) return parseFloat((n / 1_000_000_000).toFixed(2)) + 'B';
+    if (n >= 1_000_000)     return parseFloat((n / 1_000_000).toFixed(2)) + 'M';
+    if (n >= 1_000)         return parseFloat((n / 1_000).toFixed(1)) + 'K';
     return n.toFixed(0);
   }
 }
