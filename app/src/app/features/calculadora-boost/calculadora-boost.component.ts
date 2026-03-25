@@ -142,6 +142,7 @@ export class CalculadoraBoostComponent {
   detalhesAbertos = signal(false);
   equipamentoDetalhesAtivo = signal<string>('capacete');
   equipamentosSelecionados = signal<Set<string>>(new Set());
+  armaEspecial = signal(false);
 
   private precoMap = computed(() => ({
     ceu:      this.precoCeu()      ?? 0,
@@ -160,20 +161,21 @@ export class CalculadoraBoostComponent {
   resumoPorEquipamento = computed(() => {
     const precos = this.precoMap();
     const selecionados = this.equipamentosSelecionados();
+    const armaEspecial = this.armaEspecial();
     return EQUIPAMENTOS_BOOST.map((eq) => {
-      let totalCristaisRaw = 0;
-      let totalCristaisRawFiltrado = 0;
+      let totalCristais = 0;
+      let totalCristaisFiltrado = 0;
       let totalCusto = 0;
       for (const nivel of BOOST_LEVELS) {
-        const tent = calcTentativasEsperadas(nivel.chance, nivel.pity);
-        const cristais = tent * eq.cristais;
-        totalCristaisRaw += cristais;
-        if (precos[nivel.cristal] > 0) totalCristaisRawFiltrado += cristais;
-        totalCusto += cristais * precos[nivel.cristal];
+        const chance = (eq.id === 'arma' && armaEspecial) ? 0.20 : nivel.chance;
+        const pity   = (eq.id === 'arma' && armaEspecial) ? 6    : nivel.pity;
+        const tent = calcTentativasEsperadas(chance, pity);
+        const cristais = Math.round(tent) * eq.cristais;
+        totalCristais += cristais;
+        if (precos[nivel.cristal] > 0) totalCristaisFiltrado += cristais;
+        totalCusto += tent * eq.cristais * precos[nivel.cristal];
       }
-      const totalCristais = Math.round(totalCristaisRaw / eq.cristais) * eq.cristais;
-      const totalCristaisFiltrado = Math.round(totalCristaisRawFiltrado / eq.cristais) * eq.cristais;
-      return { ...eq, totalCristais, totalCristaisFiltrado, totalCusto, selecionado: selecionados.has(eq.id) };
+      return { ...eq, totalCristais, totalCristaisFiltrado: totalCristaisFiltrado, totalCusto, selecionado: selecionados.has(eq.id) };
     });
   });
 
@@ -181,17 +183,19 @@ export class CalculadoraBoostComponent {
     const precos = this.precoMap();
     const guardados = this.guardadosMap();
     const selecionados = this.equipamentosSelecionados();
+    const armaEspecial = this.armaEspecial();
     const equipSelecionados = EQUIPAMENTOS_BOOST.filter(e => selecionados.has(e.id));
     return FAIXAS.map((faixa) => {
       const niveisDoFaixa = BOOST_LEVELS.filter(n => n.cristal === faixa.id);
-      let totalCristaisRaw = 0;
+      let totalCristais = 0;
       for (const eq of equipSelecionados) {
         for (const nivel of niveisDoFaixa) {
-          const tent = calcTentativasEsperadas(nivel.chance, nivel.pity);
-          totalCristaisRaw += tent * eq.cristais;
+          const chance = (eq.id === 'arma' && armaEspecial) ? 0.20 : nivel.chance;
+          const pity   = (eq.id === 'arma' && armaEspecial) ? 6    : nivel.pity;
+          const tent = calcTentativasEsperadas(chance, pity);
+          totalCristais += Math.round(tent) * eq.cristais;
         }
       }
-      const totalCristais = Math.round(totalCristaisRaw);
       const cristaisAComprar = Math.max(0, totalCristais - guardados[faixa.id]);
       const totalCusto = cristaisAComprar * precos[faixa.id];
       return { ...faixa, totalCristais, totalCusto };
@@ -215,14 +219,17 @@ export class CalculadoraBoostComponent {
     const precos = this.precoMap();
     const eq = EQUIPAMENTOS_BOOST.find((e) => e.id === this.equipamentoDetalhesAtivo()) ?? EQUIPAMENTOS_BOOST[0];
     const mult = eq.cristais;
+    const isArmaEspecial = eq.id === 'arma' && this.armaEspecial();
     return BOOST_LEVELS.map((n) => {
       const faixa = FAIXAS.find((f) => f.id === n.cristal)!;
-      const tentativasRaw = calcTentativasEsperadas(n.chance, n.pity);
+      const chance = isArmaEspecial ? 0.20 : n.chance;
+      const pity   = isArmaEspecial ? 6    : n.pity;
+      const tentativasRaw = calcTentativasEsperadas(chance, pity);
       const cristaisRaw = tentativasRaw * mult;
       const tentativas = Math.round(tentativasRaw);
       const cristais = Math.round(cristaisRaw / mult) * mult;
       const custo = cristaisRaw * precos[n.cristal];
-      return { ...n, tentativas, cristais, custo, faixa };
+      return { ...n, chance, pity, tentativas, cristais, custo, faixa };
     });
   });
 
@@ -286,7 +293,10 @@ export class CalculadoraBoostComponent {
 
   eqCardClass(id: string): string {
     const base = 'flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200 cursor-pointer';
-    return this.equipamentosSelecionados().has(id)
+    const selecionado = this.equipamentosSelecionados().has(id);
+    const armaSpecial = id === 'arma' && selecionado && this.armaEspecial();
+    if (armaSpecial) return `${base} bg-yellow-400/30 border-yellow-400 text-yellow-100`;
+    return selecionado
       ? `${base} bg-yellow-500/10 border-yellow-400 text-yellow-300`
       : `${base} bg-slate-800 border-slate-700 text-slate-500`;
   }
