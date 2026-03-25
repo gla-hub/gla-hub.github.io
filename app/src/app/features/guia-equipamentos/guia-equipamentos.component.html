@@ -84,25 +84,32 @@
         </div>
 
         <!-- Tabela de raridade -->
-        <div class="overflow-x-auto flex-1">
-          <table class="w-full text-xs">
+        <div class="flex-1 overflow-hidden">
+          <table class="table-fixed w-full text-xs">
+            <colgroup>
+              <col class="w-[38%]">
+              <col class="w-[15.5%]">
+              <col class="w-[15.5%]">
+              <col class="w-[15.5%]">
+              <col class="w-[15.5%]">
+            </colgroup>
             <thead>
               <tr>
-                <th class="text-left text-slate-600 font-medium pb-2 pr-4">Atributo</th>
-                <th class="text-center text-slate-300 font-medium pb-2 px-2">Normal</th>
-                <th class="text-center text-blue-400 font-medium pb-2 px-2">Raro</th>
-                <th class="text-center text-purple-400 font-medium pb-2 px-2">Épico</th>
-                <th class="text-center text-yellow-400 font-medium pb-2 px-2">Lendário</th>
+                <th class="text-left text-slate-600 font-medium pb-2">Atributo</th>
+                <th class="text-center text-slate-300 font-medium pb-2 leading-tight">Normal</th>
+                <th class="text-center text-blue-400 font-medium pb-2 leading-tight">Raro</th>
+                <th class="text-center text-purple-400 font-medium pb-2 leading-tight">Épico</th>
+                <th class="text-center text-yellow-400 font-medium pb-2 leading-tight">Lend.</th>
               </tr>
             </thead>
             <tbody>
               @for (attr of eq.atributos; track attr.nome) {
                 <tr class="border-t border-slate-800/70">
-                  <td class="text-slate-400 py-2 pr-4 font-medium">{{ attr.nome }}</td>
-                  <td class="text-center text-slate-300 py-2 px-2 tabular-nums">{{ attr.limites.normal }}</td>
-                  <td class="text-center text-blue-400 py-2 px-2 tabular-nums">{{ attr.limites.raro }}</td>
-                  <td class="text-center text-purple-400 py-2 px-2 tabular-nums">{{ attr.limites.epico }}</td>
-                  <td class="text-center text-yellow-400 py-2 px-2 tabular-nums">{{ attr.limites.lendario }}</td>
+                  <td class="text-slate-400 py-2 pr-1 font-medium leading-tight">{{ attr.nome }}</td>
+                  <td class="text-center text-slate-300 py-2 tabular-nums">{{ attr.limites.normal }}</td>
+                  <td class="text-center text-blue-400 py-2 tabular-nums">{{ attr.limites.raro }}</td>
+                  <td class="text-center text-purple-400 py-2 tabular-nums">{{ attr.limites.epico }}</td>
+                  <td class="text-center text-yellow-400 py-2 tabular-nums">{{ attr.limites.lendario }}</td>
                 </tr>
               }
             </tbody>
