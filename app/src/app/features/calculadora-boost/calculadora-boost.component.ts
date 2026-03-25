@@ -141,7 +141,7 @@ export class CalculadoraBoostComponent {
 
   detalhesAbertos = signal(false);
   equipamentoDetalhesAtivo = signal<string>('capacete');
-  equipamentosSelecionados = signal<Set<string>>(new Set(EQUIPAMENTOS_BOOST.map(e => e.id)));
+  equipamentosSelecionados = signal<Set<string>>(new Set());
 
   private precoMap = computed(() => ({
     ceu:      this.precoCeu()      ?? 0,
@@ -277,8 +277,6 @@ export class CalculadoraBoostComponent {
   }
 
   toggleEquipamento(id: string): void {
-    const sel = this.equipamentosSelecionados();
-    if (sel.has(id) && sel.size <= 1) return;
     this.equipamentosSelecionados.update(s => {
       const next = new Set(s);
       next.has(id) ? next.delete(id) : next.add(id);
