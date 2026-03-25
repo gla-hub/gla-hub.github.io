@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 interface LimiteRaridade {
   normal: number;
@@ -89,4 +89,13 @@ const EQUIPAMENTOS: EquipamentoTabela[] = [
 })
 export class TabelaRaridadeComponent {
   readonly equipamentos = EQUIPAMENTOS;
+
+  maniackCopiado = signal(false);
+
+  copiarManiack(): void {
+    navigator.clipboard.writeText('maniackrackjack').then(() => {
+      this.maniackCopiado.set(true);
+      setTimeout(() => this.maniackCopiado.set(false), 2000);
+    });
+  }
 }
