@@ -91,6 +91,7 @@ export class TabelaRaridadeComponent {
   readonly equipamentos = EQUIPAMENTOS;
 
   maniackCopiado = signal(false);
+  maniackTooltipAberto = signal(false);
 
   copiarManiack(): void {
     navigator.clipboard.writeText('maniackrackjack').then(() => {

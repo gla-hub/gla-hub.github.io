@@ -24,11 +24,33 @@ const FERRAMENTAS = [
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
   template: `
+    <!-- Backdrop mobile (apenas quando aberta) -->
+    @if (!recolhida()) {
+      <div
+        class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm sm:hidden"
+        (click)="recolhida.set(true)"
+      ></div>
+    }
+
+    <!-- Botão flutuante para abrir (mobile, apenas quando fechada) -->
+    @if (recolhida()) {
+      <button
+        id="sidebar-mobile-open-btn"
+        (click)="recolhida.set(false)"
+        class="sm:hidden fixed top-3 left-3 z-50 flex items-center justify-center w-9 h-9 bg-slate-900 border border-slate-800 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800 transition-all shadow-lg"
+        title="Abrir menu"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    }
+
     <aside
       id="sidebar"
-      class="bg-slate-900 border-r border-slate-800 flex flex-col h-full shrink-0 transition-all duration-300"
-      [class.w-60]="!recolhida()"
-      [class.w-14]="recolhida()"
+      [class]="asideClass"
     >
 
       <!-- Brand + toggle -->
@@ -53,7 +75,7 @@ const FERRAMENTAS = [
               <line x1="3" y1="18" x2="21" y2="18"/>
             </svg>
           } @else {
-            <!-- Chevron left -->
+            <!-- Chevron left / X no mobile -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="15 18 9 12 15 6"/>
             </svg>
@@ -70,6 +92,7 @@ const FERRAMENTAS = [
           routerLink="/home"
           routerLinkActive="bg-slate-700/50 !text-slate-200"
           [title]="recolhida() ? 'Início' : ''"
+          (click)="fecharNoMobile()"
           class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all mb-3"
           [class.justify-center]="recolhida()"
         >
@@ -91,6 +114,7 @@ const FERRAMENTAS = [
             [routerLink]="f.rota"
             routerLinkActive="bg-yellow-500/10 !text-yellow-300 border-l-2 border-yellow-400"
             [title]="recolhida() ? f.label : ''"
+            (click)="fecharNoMobile()"
             class="flex items-center gap-3 px-2 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all mb-1"
             [class.justify-center]="recolhida()"
             [class.pl-[10px]]="!recolhida()"
@@ -108,5 +132,16 @@ const FERRAMENTAS = [
 })
 export class SidebarComponent {
   readonly ferramentas = FERRAMENTAS;
-  recolhida = signal(false);
+  recolhida = signal(typeof window !== 'undefined' && window.innerWidth < 640);
+
+  get asideClass(): string {
+    const base = 'fixed sm:relative inset-y-0 left-0 z-50 sm:z-auto bg-slate-900 border-r border-slate-800 flex flex-col h-screen sm:h-full shrink-0 transition-all duration-300';
+    return this.recolhida()
+      ? `${base} -translate-x-full sm:translate-x-0 w-60 sm:w-14`
+      : `${base} translate-x-0 w-60`;
+  }
+
+  fecharNoMobile(): void {
+    if (window.innerWidth < 640) this.recolhida.set(true);
+  }
 }
