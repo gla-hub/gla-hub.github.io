@@ -15,7 +15,7 @@ const FERRAMENTAS = [
   {
     label: 'Calculadora de Boost',
     rota: '/calculadora-boost',
-    icone: '/sky_crystal.gif',
+    icone: '/radiant_crystal.gif',
   },
 ];
 
