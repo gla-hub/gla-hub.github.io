@@ -26,6 +26,14 @@ const FERRAMENTAS: Ferramenta[] = [
     icone: '/Divine_Crystal.gif',
     disponivel: true,
   },
+  {
+    label: 'Calculadora de Boost',
+    descricao:
+      'Estime quantos cristais e berries você vai gastar em média para boostar um equipamento do +0 ao +16.',
+    rota: '/calculadora-boost',
+    icone: '/radiant_crystal.gif',
+    disponivel: true,
+  },
 ];
 
 @Component({

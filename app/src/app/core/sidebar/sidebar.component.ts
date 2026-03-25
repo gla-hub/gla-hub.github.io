@@ -12,6 +12,11 @@ const FERRAMENTAS = [
     rota: '/otimizador-cristal-divino',
     icone: '/Divine_Crystal.gif',
   },
+  {
+    label: 'Calculadora de Boost',
+    rota: '/calculadora-boost',
+    icone: '/radiant_crystal.gif',
+  },
 ];
 
 @Component({

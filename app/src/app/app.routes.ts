@@ -22,4 +22,11 @@ export const routes: Routes = [
         (m) => m.TabelaRaridadeComponent
       ),
   },
+  {
+    path: 'calculadora-boost',
+    loadComponent: () =>
+      import('./features/calculadora-boost/calculadora-boost.component').then(
+        (m) => m.CalculadoraBoostComponent
+      ),
+  },
 ];
