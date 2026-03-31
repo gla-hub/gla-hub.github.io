@@ -30,7 +30,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'quiz-search',
+    path: 'foxy-quiz',
     loadComponent: () =>
       import('./features/quiz-search/quiz-search.component').then(
         (m) => m.QuizSearchComponent

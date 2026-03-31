@@ -38,7 +38,7 @@ const FERRAMENTAS: Ferramenta[] = [
     label: 'Foxy Quiz',
     descricao:
       'Pesquisa pelas respostas do Foxy Quiz de maneira rápida e dinâmica para garantir a sua recompensa semanal sem maiores dificuldades.',
-    rota: '/quiz-search',
+    rota: '/foxy-quiz',
     icone: `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Ccircle cx='12' cy='17' r='.5' fill='%2394a3b8'/%3E%3C/svg%3E`,
     disponivel: true,
   },
