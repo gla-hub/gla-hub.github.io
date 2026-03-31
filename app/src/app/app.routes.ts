@@ -29,4 +29,11 @@ export const routes: Routes = [
         (m) => m.CalculadoraBoostComponent
       ),
   },
+  {
+    path: 'quiz-search',
+    loadComponent: () =>
+      import('./features/quiz-search/quiz-search.component').then(
+        (m) => m.QuizSearchComponent
+      ),
+  },
 ];
