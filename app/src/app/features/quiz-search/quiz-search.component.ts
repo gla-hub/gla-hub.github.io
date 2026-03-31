@@ -26,6 +26,11 @@ const QUIZ_INDEX: { entry: QuizEntry; normalized: string }[] = QUIZ_DATA.map(e =
       <div class="mb-8">
         <h1 class="text-2xl font-bold text-white tracking-tight">Foxy Quiz</h1>
         <p class="text-sm text-slate-500 mt-1">Pesquise uma afirmação para ver se ela é verdadeira ou falsa.</p>
+        <p class="text-xs text-slate-600 mt-2">
+          As respostas foram obtidas da
+          <a href="https://wiki.gla.com.br/index.php/Resposta_Foxy_Quizz" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-slate-300 underline underline-offset-2 transition-colors">Wiki oficial do GLA</a>.
+          Todo o crédito ao conteúdo é dos colaboradores da Wiki.
+        </p>
       </div>
 
       <!-- Weekly check -->
